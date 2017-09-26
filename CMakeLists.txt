@@ -25,13 +25,10 @@ endif( WITH_INOTIFY )
 if( WITH_FSEVENTS )
 	set( LSYNCD_SRC ${LSYNCD_SRC} fsevents.c )
 
-	option( XNU_DIR "Path to the xnu sources" )
-
-#	if( NOT XNU_DIR/bsd/sys/fsevents.h )
-#		message( SEND_ERROR "Cannot find bsd/sys/fsevents.h in XNU_DIR" )
-#	endif( )
-
-	include_directories( ${XNU_DIR} )
+	FIND_LIBRARY( CORE_FOUNDATION_LIBRARY CoreFoundation )
+	FIND_LIBRARY( CORE_SERVICES_LIBRARY CoreServices )
+	MARK_AS_ADVANCED ( CORE_FOUNDATION_LIBRARY CORE_SERVICES_LIBRARY )
+	SET( EXTRA_LIBS ${CORE_FOUNDATION_LIBRARY} ${CORE_SERVICES_LIBRARY} )
 endif( WITH_FSEVENTS )
 
 
@@ -103,7 +100,7 @@ add_custom_target( tests
 
 # compiling and linking it all together
 add_executable( lsyncd ${LSYNCD_SRC} )
-target_link_libraries( lsyncd ${LUA_LIBRARIES} )
+target_link_libraries( lsyncd ${LUA_LIBRARIES} ${EXTRA_LIBS} )
 
 install( TARGETS lsyncd RUNTIME DESTINATION bin )
 install( FILES doc/manpage/lsyncd.1 DESTINATION man )

@@ -1176,7 +1176,7 @@ l_exec( lua_State *L )
 		// replaces midfile 0 chars by linefeed
 		size_t len = 0;
 		const char * cs = lua_tolstring( L, -1, &len );
-		char * s = s_calloc( len + 1, sizeof( char ) ); 
+		char * s = s_calloc( len + 1, sizeof( char ) );
 
 		for( i = 0; i < len; i++ )
 		{
